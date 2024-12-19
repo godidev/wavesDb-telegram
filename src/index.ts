@@ -10,16 +10,23 @@ if (!TOKEN) {
 
 const bot = new Telegraf(TOKEN)
 
-bot
-  .launch()
-  .then(() => {
+async function launchBot() {
+  try {
+    await bot.launch()
     console.log('Bot iniciado')
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('Error al iniciar el bot', err)
-  })
+    process.exit(1)
+  }
+}
 
 bot.command('lastbuoys', async (ctx) => {
   const chatId = ctx.chat.id
   await checkAndNotify(chatId, bot)
 })
+
+launchBot()
+
+export default function handler(_: any, res: any) {
+  res.status(200).send('Bot is running')
+}
