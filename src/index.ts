@@ -1,14 +1,19 @@
 import { Telegraf } from 'telegraf'
+import express from 'express'
 import { checkAndNotify } from './checkWaves'
 
-const { TOKEN } = process.env
+const { TOKEN, TELEGRAM_WEBHOOK_URL, PORT = 3000, SECRET_PATH } = process.env
 
-if (!TOKEN) {
-  console.error('Missing token')
+if (!TOKEN || !TELEGRAM_WEBHOOK_URL) {
+  console.error('Missing Telegram token or webhook URL')
   process.exit(1)
 }
 
 const bot = new Telegraf(TOKEN)
+const app = express()
+
+bot.telegram.setWebhook(`${TELEGRAM_WEBHOOK_URL}/${SECRET_PATH}`)
+app.use(bot.webhookCallback(`/${SECRET_PATH}`))
 
 async function launchBot() {
   try {
@@ -30,3 +35,7 @@ launchBot()
 export default function handler(_: any, res: any) {
   res.status(200).send('Bot is running')
 }
+
+app.listen(PORT, () => {
+  console.log(`Bot is running at port ${process.env.PORT}`)
+})
