@@ -17,6 +17,15 @@ const verificarCondiciones = (data: any) => {
   return data
 }
 
+export const updateData = async (chatId: number, bot: Telegraf<Context>) => {
+  const response = await axios.get('https://wave-db.vercel.app/scrape')
+  if (response.status === 200) {
+    await bot.telegram.sendMessage(chatId, 'Datos actualizados')
+  } else {
+    await bot.telegram.sendMessage(chatId, 'Error al actualizar los datos')
+  }
+}
+
 export const checkAndNotify = async (
   chatId: number,
   bot: Telegraf<Context>,
