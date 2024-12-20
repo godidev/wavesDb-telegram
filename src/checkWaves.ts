@@ -49,7 +49,7 @@ const formatTable = (data: formatedBuoys[]) => {
   table += '--------------------------------------------'
   for (const hour in data) {
     const { datos, fecha } = data[hour]
-    const hora = fecha.slice(11, 13)
+    const hora = fecha.slice(11, 16)
     table += `\n${centerText(hora, 4)}`
     for (const [key, value] of Object.entries(datos)) {
       let formattedValue = value.toString()
