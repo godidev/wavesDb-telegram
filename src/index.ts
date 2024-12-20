@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf'
 import express from 'express'
-import { checkAndNotify } from './checkWaves'
+import { checkAndNotify, updateData } from './checkWaves'
 
 const { TOKEN, TELEGRAM_WEBHOOK_URL, PORT = 3000, SECRET_PATH } = process.env
 
@@ -28,6 +28,15 @@ async function launchBot() {
 bot.command('lastbuoys', async (ctx) => {
   const chatId = ctx.chat.id
   await checkAndNotify(chatId, bot)
+})
+
+bot.command('update', async (ctx) => {
+  const chatId = ctx.chat.id
+  try {
+    await updateData(chatId, bot)
+  } catch (error) {
+    console.error('Error al actualizar los datos', error)
+  }
 })
 
 launchBot()
